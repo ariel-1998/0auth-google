@@ -1,16 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./home.module.css";
 import { UserModel } from "../../models/UserModel";
 import profileImg from "../../assets/profile-img.png";
-// import googleImg from "../../assets/google-img.png";
+import axios from "axios";
+import { useUser } from "../../context/UserProvider";
 
 type HomeProps = {
   user: UserModel;
 };
+
 const Home: React.FC<HomeProps> = ({ user }) => {
-  const logout = () => {
-    window.open(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, "_self");
+  const { setUser } = useUser();
+  const logout = async () => {
+    try {
+      const url = `${import.meta.env.VITE_API_BASE_URL}/auth/logout`;
+      await axios.delete(url, { withCredentials: true });
+      setUser(null);
+      console.log("deleted");
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const url = `${import.meta.env.VITE_API_BASE_URL}/protected/users`;
+        const { data } = await axios.get(url, { withCredentials: true });
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUsers();
+  }, []);
   return (
     <div className={styles.container}>
       <h1 className={styles.heading}>Home</h1>

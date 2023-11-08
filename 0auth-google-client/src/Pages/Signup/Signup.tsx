@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./signup.module.css";
 import signupImg from "../../assets/signup-img.png";
-import googleImg from "../../assets/google-img.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import GoogleAuthBtn from "../../components/GoogleAuthBtn/GoogleAuthBtn";
 
 const Signup: React.FC = () => {
-  const googleAuth = () => {
-    window.open(
-      `${import.meta.env.VITE_API_BASE_URL}/auth/google/callback`,
-      "_self"
-    );
-  };
+  // const [error, setError] = useState(false);
+  // const { search } = useLocation();
+
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(search);
+  //   const error = urlParams.get("error");
+
+  //   if (error == "true") setError(true);
+  // }, []);
 
   return (
     <div className={styles.container}>
@@ -29,12 +32,11 @@ const Signup: React.FC = () => {
             className={styles.input}
           />
           <button className={styles.btn}>Sign Up</button>
+          {/* <span className={styles.text + " " + styles.error}>
+            {error ? "error!" : "no"}
+          </span> */}
           <p className={styles.text}>or</p>
-          <button className={styles.google_btn} onClick={googleAuth}>
-            <img src={googleImg} alt="google icon" />
-            <span>Sign up with Google</span>
-          </button>
-
+          <GoogleAuthBtn />
           <p className={styles.text}>
             Have an Account? <Link to={"/login"}>Log in</Link>
           </p>

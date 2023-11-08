@@ -4,11 +4,8 @@ import passport from "passport";
 export const authRouter = Router();
 
 authRouter.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: process.env.CLIENT_URL,
-    failureRedirect: "login/error",
-  })
+  "/google/login",
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 authRouter.get("/login/success", (req, res) => {
@@ -16,15 +13,17 @@ authRouter.get("/login/success", (req, res) => {
   res.status(403).json("unAutorized!");
 });
 
-authRouter.get("/login/error", (req, res) => {
-  res.status(401).json("error loggin in!");
+authRouter.delete("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) res.status(500).json("Unable to logout, try again.");
+    res.sendStatus(200);
+  });
 });
 
 authRouter.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  "/google/callback",
+  passport.authenticate("google", {
+    successRedirect: process.env.CLIENT_URL,
+    failureRedirect: process.env.CLIENT_URL + "/login",
+  })
 );
-
-authRouter.get("/logout", (req, res) => {
-  req.logout(() => console.log("loggedOut"));
-});
